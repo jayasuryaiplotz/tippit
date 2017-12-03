@@ -1,0 +1,17 @@
+<TextInput ux:Class="Tag.IconTextInput" TextColor="{Resource Tag.LoginInput}" PlaceholderColor="{Resource Tag.LoginInputPlaceholder}" FontSize="14" Padding="50,16,16,10">
+  
+     <DockPanel Layer="Background"  >
+        <Rectangle Width="1" Alignment="CenterLeft" Height="32" Margin="40,0,0,0"  Color="{Resource Tag.LoginInputIcon}" Opacity=".4"  />
+
+        <Rectangle CornerRadius="6" >
+            <SolidColor ux:Name="back" Color="#ccc" />
+            <Stroke ux:Name="stroke" Color="#333" Width="1"/>
+        </Rectangle>
+
+    </DockPanel> 
+
+    <WhileFocused>
+       <Change stroke.Color="#ccc" Duration=".4"  /> 
+    </WhileFocused>
+
+</TextInput>

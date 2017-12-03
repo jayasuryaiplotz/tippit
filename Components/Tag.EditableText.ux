@@ -1,0 +1,62 @@
+<Container ux:Class="Tag.EditableText" ux:Name="self" Subtree="iconPanel" DisplayIcon="true" FontSize="16">
+
+    <string ux:Property="Text"/>
+    <string ux:Property="Field"/>
+    <string ux:Property="HintText"/>
+    <bool ux:Property="DisplayIcon"/>
+    <int ux:Property="FontSize"/>
+    <bool ux:Property="EditingMode"/>
+
+    <JavaScript ux:Binding="Children" >
+        var Observable = require('FuseJS/Observable');
+
+        var fieldItem;
+
+        this.Field.onValueChanged( module, function(item) {
+			fieldItem = item;
+		})
+
+        function onTextEditValueChange(args) {
+            editTextChangeEvent.raise({ text: args.value, field:fieldItem });
+        }
+
+        module.exports = {
+            onTextEditValueChange: onTextEditValueChange,
+        }
+    </JavaScript>
+
+    <DockPanel ux:Binding="Children" Height="38" Margin="0,4,0,0">
+     
+        <Panel ux:Name="iconPanel" Width="26" Dock="Left" Margin="0,0,10,0" />
+        <WhileFalse Value="{ReadProperty self.DisplayIcon}">
+            <Change iconPanel.Visibility="Collapsed" />
+        </WhileFalse>
+
+		<Panel ux:Binding="Children" >
+            <Match Value="{ReadProperty self.EditingMode}">
+                <Case Bool="false">
+                    <Panel>
+                        <Match String="{ReadProperty self.Text}">
+                            <Case String="">
+                                <PlaceholderText Value="{ReadProperty self.HintText}" Alignment="CenterLeft" />
+                            </Case>
+
+                            <Case IsDefault="true">
+                                <LabelText Value="{ReadProperty self.Text}" Alignment="CenterLeft" FontSize="{ReadProperty self.FontSize}" />
+                            </Case>
+                        </Match>
+                    </Panel>
+                </Case>
+
+                <Case Bool="true">
+                    <Tag.TextInput Value="{Property self.Text}" HintText="{ReadProperty self.HintText}" ValueChanged="{onTextEditValueChange}" />
+                </Case>
+            </Match>
+        </Panel>
+
+        <OnUserEvent ux:Class="EditTextChangeEvent" EventName="editTextChangeEvent" />
+        <UserEvent ux:Name="editTextChangeEvent" />
+    </DockPanel>
+
+</Container>
+

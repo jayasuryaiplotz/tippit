@@ -1,0 +1,36 @@
+<Panel ux:Class="Tag.RadioGroup" BorderColor="#000">
+
+    <object ux:Property="ListItems" />
+	<string  ux:Property="SelectedIndex" />
+
+	<float4 ux:Property="BorderColor" />
+
+    <JavaScript ux:Binding="Children" >
+        var Observable = require('FuseJS/Observable');
+
+         var selItemIndex;
+
+        this.SelectedIndex.onValueChanged( module, function(item) {
+			selItemIndex = item;
+		}) 
+
+        function onRadioGroupSelectionChange(){
+            radioGroupSelectionChange.raise({ selectedIndex: selItemIndex });
+        }
+
+        module.exports = {
+            onRadioGroupSelectionChange:onRadioGroupSelectionChange,
+        }
+    </JavaScript>
+
+    <StackPanel ItemSpacing="10" Orientation="Horizontal"  >
+        <Selection Value="{Property SelectedIndex}" MinCount="1" MaxCount="1" SelectionChanged="{onRadioGroupSelectionChange}" />
+
+        <Each Items="{ReadProperty ListItems}" >
+            <Tag.RadioButton IndexValue="{index}" Label="{name}" BorderColor="{ReadProperty BorderColor}" />
+        </Each>
+    </StackPanel>
+
+    <OnUserEvent ux:Class="RadioGroupSelectionChange" EventName="radioGroupSelectionChange" />
+    <UserEvent ux:Name="radioGroupSelectionChange" />
+</Panel>

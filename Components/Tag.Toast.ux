@@ -1,0 +1,17 @@
+<Panel ux:Class="Tag.Toast" ux:Name="self" Opacity="0" Visibility="Hidden" >
+    <JavaScript File="Tag.Toast.js" />
+
+
+	<Panel Margin="0,0,0,40" Padding="14" Alignment="BottomCenter" MaxWidth="360"  >
+        <LabelText Value="{messageText}" Color="{Resource Tag.WhiteTextColor}" TextWrapping="Wrap" TextTruncation="Standard"   />
+	    <Rectangle Color="#2a2b30" Layer="Background" CornerRadius="16" />
+        <Shadow  Mode="PerPixel"/>
+    </Panel>
+
+
+    <WhileTrue Value="{showMessage}">
+        <Change self.Visibility="Visible" DurationBack="1.1" />
+        <Change self.Opacity="1" Duration="1" Easing="CubicInOut" />
+    </WhileTrue>
+
+</Panel>

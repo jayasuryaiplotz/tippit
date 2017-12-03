@@ -1,0 +1,37 @@
+<Panel ux:Class="MessageAlert" ux:Name="self" Opacity="0" Visibility="Hidden" >
+    <JavaScript File="MessageAlert.js" />
+
+
+	<Panel Margin="16" Padding="10" Alignment="Center" Width="100%" MaxWidth="360"  >
+        <StackPanel ItemSpacing="10">
+            <HeaderText Value="{titleTxt}" />
+            <LabelText Value="{messageTxt}" TextWrapping="Wrap" />
+       
+            <Panel>
+                <Tag.AlertButton ux:Name="okButton" Text="OK" Alignment="Right" Clicked="{yesClickHandler}" />
+
+                <StackPanel ux:Name="confirmButtons" Visibility="Collapsed" Orientation="Horizontal" ItemSpacing="10" ContentAlignment="Right">
+                    <Tag.AlertButton Text="YES" Clicked="{yesClickHandler}"/>
+                    <Tag.AlertButton Text="NO" Clicked="{noClickHandler}"/>
+                </StackPanel>
+
+                <WhileTrue Value="{showConfirm}">
+                    <Change confirmButtons.Visibility="Visible" />
+                    <Change okButton.Visibility="Collapsed" />
+                </WhileTrue>
+            </Panel>
+
+        </StackPanel>
+
+	    <Rectangle Color="#fff" Layer="Background" CornerRadius="2" />
+        <Shadow  Mode="Background"/>
+    </Panel>
+
+	<Rectangle Color="#000" Opacity=".6" Layer="Background" Clicked="{alertClose}" />
+
+    <WhileTrue Value="{showAlert}">
+        <Change self.Visibility="Visible" />
+        <Change self.Opacity="1" Duration="0.4" Easing="CubicInOut" />
+    </WhileTrue>
+
+</Panel>

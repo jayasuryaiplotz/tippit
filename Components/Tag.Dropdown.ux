@@ -1,0 +1,178 @@
+<Panel ux:Class="Tag.Dropdown" ux:Name="menu" SelectedIndex="-1" BackgroundColor="#FDFDFD" BorderColor="#BFBFBF" TextColor="#000000" FontSize="14">
+	
+	<object ux:Property="ListItems" />
+	<string  ux:Property="LabelField" />
+	<string  ux:Property="SelectedIndex" />
+
+	<float4 ux:Property="TextColor" />
+	<Brush ux:Property="BackgroundColor" />
+	<Brush ux:Property="BorderColor" />
+	<float ux:Property="FontSize" />
+
+	<JavaScript>
+        var Observable = require('FuseJS/Observable');
+
+        var dataProviderChange = this.ListItems.inner();
+        var dataProvider = Observable();
+         //var selectedText = Observable("Please Select...");
+
+        var selectedIndex = Observable();
+        var dropOpenStatus = Observable(false);
+
+        var labelField = "name";
+
+ 		this.LabelField.onValueChanged( module, function(item) {
+			labelField = item;
+		})
+
+ 		this.SelectedIndex.onValueChanged( module, function(item) {
+			selectedIndex.value = Number(item);
+		})
+
+
+		
+        dataProvider = dataProviderChange.map(function(item, index) {
+            item.nameLocal = item[labelField];
+            item.indexLocal = index;
+
+			/*if (selectedIndex.value == index) {
+				selectedText.value = item[labelField];
+			}*/
+
+            return item ;
+        });
+
+		var selectedText = Observable(function () {
+			if (dataProvider.length > 0) {
+				if (selectedIndex.value == -1) {
+					return "Please Select..." ;
+				}else{
+					var selectValue = dataProvider.getAt(selectedIndex.value);
+					return selectValue[labelField];
+				}
+			}else{
+				return "Loading... " ;
+			}
+		});
+        
+		function listItemClick(args){
+			selectedText.value = args.data[labelField];
+			selectedIndex.value = args.data.indexLocal;
+
+			selctionChange.raise({selectedItem: JSON.stringify(args.data)});
+		}
+
+		var dropOpenEmited = false;
+
+		function dropOpenedHandle(){
+			dropOpenEmited = true;
+		    tagEvents.emit("dropdoenCloseOther");
+		}
+
+		tagEvents.on("dropdoenCloseOther", function (arg) {
+			if(dropOpenEmited){
+				dropOpenEmited = false;
+			}else{
+				dropOpenStatus.value = false;
+			}
+		});
+		
+		module.exports = {
+			dataProvider:dataProvider,
+			selectedText: selectedText,
+			selectedIndex: selectedIndex,
+			dropOpenStatus: dropOpenStatus,
+
+			listItemClick: listItemClick,
+			dropOpenedHandle: dropOpenedHandle,
+		}
+	</JavaScript>
+
+	<OnUserEvent ux:Class="SelctionChange" EventName="selctionChange" />
+	<UserEvent ux:Name="selctionChange" />
+
+	<!-- THE LIST PANEL (when dropdown is open) -->
+	<Panel ux:Class="DropdownOption" ux:Name="self" Height="36" >
+		<string ux:Property="Text" />
+        <string ux:Property="IndexValue" />
+
+		<Brush ux:Property="BackgroundColor" />
+		<Brush ux:Property="BorderColor" />
+		<float ux:Property="FontSize" />
+		<float4 ux:Property="TextColor" />
+
+        <Selectable Value="{ReadProperty self.IndexValue}"/>
+
+		<Text Margin="10,0,0,0" Alignment="CenterLeft" Value="{ReadProperty self.Text}" FontSize="{ReadProperty self.FontSize}" Color="{ReadProperty self.TextColor}" />
+
+		<Rectangle Layer="Background" ux:Name="bgCol" Fill="{ReadProperty self.BackgroundColor}">
+			<Stroke Brush="{ReadProperty self.BorderColor}" Width="1" />
+		</Rectangle>
+
+        <WhileSelected>
+			<Change bgCol.Color="#ccc" Duration=".2" />
+		</WhileSelected>
+
+		<Tapped>
+			<!--<ToggleSelection/>-->
+			<Callback Handler="{listItemClick}" />
+		</Tapped>
+	</Panel>
+
+
+	<!-- THE FIRST PANEL (when dropdown is closed) -->
+	<Panel ux:Class="DropdownSelectedItem" ux:Name="self" Height="40" >
+		<string ux:Property="Text" />
+		<Brush ux:Property="BackgroundColor" />
+		<Brush ux:Property="BorderColor" />
+		<float ux:Property="FontSize" />
+		<float4 ux:Property="TextColor" />
+		<Text Margin="10,0,0,0" FontSize="{ReadProperty self.FontSize}" Color="{ReadProperty self.TextColor}" Alignment="CenterLeft" Value="{ReadProperty self.Text}" />
+		
+        <Panel Layer="Background">
+            <DropDownIcon Color="#000" Height="14" Width="14" Alignment="CenterRight" Margin="10" />
+			<Rectangle Layer="Background" Fill="{ReadProperty self.BackgroundColor}" Height="100%" Alignment="Top">
+				<!--Stroke Brush="{ReadProperty self.BorderColor}" Width="1" /-->
+			</Rectangle>
+		</Panel>
+	</Panel>
+
+
+
+	<!-- PANEL CONTAINING EVERYTHING -->
+	<Panel Height="40" Alignment="Top">
+		<Rectangle>
+			<Stroke Brush="{ReadProperty menu.BorderColor}" Width="1" />
+		</Rectangle>
+		<DropdownSelectedItem Text="{selectedText}" TextColor="{ReadProperty menu.TextColor}" FontSize="{ReadProperty menu.FontSize}" BackgroundColor="{ReadProperty menu.BackgroundColor}" BorderColor="{ReadProperty menu.BorderColor}" />
+		<Clicked>
+			<DebugAction Message="expandDropdown ..............."/>
+			<Toggle Target="expandDropdown" />
+		</Clicked>
+    </Panel>
+    
+    <WhileTrue ux:Name="expandDropdown" Value="{dropOpenStatus}">
+		<!-- <DebugAction Message="expandDropdown"/> -->
+
+		<Callback Handler="{dropOpenedHandle}"/>
+		<Panel Background="#fff" MaxHeight="200" Offset="0,40" Alignment="Top">
+			<!-- Height="200" -->
+			
+			<Shadow/>
+
+			<ScrollView>
+				<StackPanel>
+				 	<Selection Value="{selectedIndex}"  MaxCount="1" MinCount="1" />
+					<Each Items="{dataProvider}" >
+						<DropdownOption ux:Name="dropdownOption" Text="{nameLocal}" IndexValue="{indexLocal}" FontSize="{ReadProperty menu.FontSize}" TextColor="{ReadProperty menu.TextColor}" BackgroundColor="{ReadProperty menu.BackgroundColor}"  BorderColor="{ReadProperty menu.BorderColor}" />
+					</Each>
+				</StackPanel>
+			</ScrollView>
+
+			 <Clicked>
+				<Toggle Target="expandDropdown" />
+			</Clicked>  
+		</Panel>
+	</WhileTrue>
+
+</Panel>

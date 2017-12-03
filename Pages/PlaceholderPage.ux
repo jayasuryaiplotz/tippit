@@ -1,0 +1,21 @@
+<Page ux:Class="PlaceholderPage" >
+    <Router ux:Dependency="router" />
+
+    <JavaScript>
+
+function onViewActivate(){
+    console.log("onViewActivate--------------- 1")
+}
+
+        module.exports = {
+            onViewActivate: onViewActivate,
+        };
+    </JavaScript>
+
+<Activated>
+        <Callback Handler="{onViewActivate}"/>
+    </Activated>
+
+    <Text Value="PlaceholderPage" />
+
+</Page>

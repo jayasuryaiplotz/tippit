@@ -1,0 +1,13 @@
+<Panel ux:Class="LoadingIndicator" ThemeColor="#e44934">
+    <float4 ux:Property="ThemeColor" />
+
+    <Circle ux:Name="loadingCircle" Width="50" Height="50" StartAngleDegrees="90" LengthAngleDegrees="90">
+        <Stroke Width="2" Color="{ReadProperty ThemeColor}" />
+    </Circle>
+
+    <WhileFalse >
+        <Spin Target="loadingCircle" Frequency="2"/>
+        <!--<Cycle Target="loadingCircle.LengthAngleDegrees" Low="30" High="300" Frequency="0.7" />-->
+   </WhileFalse>
+
+</Panel>

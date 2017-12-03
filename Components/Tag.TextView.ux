@@ -1,0 +1,42 @@
+<TextView ux:Class="Tag.TextView" ux:Name="textInput" Margin="0,8,0,0" MinHeight="60" MaxHeight="120"  >
+
+    <string ux:Property="HintText" />
+
+    <float4 ux:Key="CLine" ux:Value="#e0e0e0"/>
+    <float4 ux:Key="CLineFocus" ux:Value="#2196f3"/>
+
+    <StateGroup Active="idle" ux:Name="stategroup" >
+        <State ux:Name="idle" >
+            <Move Target="placeholder" Duration="0.42" Easing="ExponentialOut" EasingBack="ExponentialIn" RelativeTo="Size" Y="0" />
+        </State>
+
+        <State ux:Name="active" >
+            <Move Target="placeholder" Duration="0.42" Easing="ExponentialOut" EasingBack="ExponentialIn" RelativeTo="Size" Y="-.7"  />
+            <Scale Target="placeholder" Duration="0.42" Easing="ExponentialOut" EasingBack="ExponentialIn" Factor="0.8"  />
+        </State>
+
+    </StateGroup>
+
+    <WhileFocused>
+        <Change stategroup.Active="active" />
+        <Change Duration="0.25" Easing="ExponentialOut" EasingBack="ExponentialIn" Target="textInputDivider.Color" Value="{Resource CLineFocus}"/>
+        <Change Duration="0.25" Easing="ExponentialOut" EasingBack="ExponentialIn" Target="dividerRect.Height" Value="2" />
+    </WhileFocused>
+
+    <WhileNotFocused>
+        <WhileContainsText >
+            <Change stategroup.Active="active" />
+        </WhileContainsText>
+    </WhileNotFocused>
+
+    <Text ux:Name="placeholder" Value="{ReadProperty textInput.HintText}" Alignment="TopLeft" TransformOrigin="TopLeft"
+			      Font="{ReadProperty textInput.Font}" FontSize="{ReadProperty textInput.FontSize}" TextColor="{Resource Tag.HintTextColor}" />
+
+    <DockPanel Layer="Background">
+        <Rectangle ux:Name="dividerRect" Height="1" Dock="Bottom">
+            <SolidColor ux:Name="textInputDivider" Color="{Resource CLine}" />
+        </Rectangle>
+    </DockPanel>
+
+</TextView>
+ 

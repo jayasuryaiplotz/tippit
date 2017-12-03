@@ -1,0 +1,23 @@
+<Container ux:Class="Tag.ActionButton" Subtree="innerPanel" ButtonColor="#000" SelectedColor="#3b3b45" Width="56" Height="56" HitTestMode="LocalBounds"  Alignment="BottomRight" Margin="16" >
+
+    <string ux:Property="ButtonColor" />
+    <string ux:Property="SelectedColor" />
+
+    <Panel ux:Binding="Children">
+        <Panel ux:Name="innerPanel" Width="24" Height="24"  Alignment="Center" TransformOrigin="Center"/>
+
+        <Circle ux:Name="backColor" Color="{Property this.ButtonColor}" Opacity="1" Width="56" Height="56" Alignment="Center" TransformOrigin="Center" >
+            <Shadow/>
+            <!-- Distance=".2" Size="2" -->
+        </Circle>
+
+        <WhilePressed>
+            <Change backColor.Color="{Property this.SelectedColor}" Duration=".15" Easing="CubicInOut" />
+        </WhilePressed>
+
+        <WhileDisabled>
+            <Change backColor.Opacity=".4" Duration=".15" />
+            <Change innerPanel.Opacity=".4" Duration=".15" />
+        </WhileDisabled>
+    </Panel>
+</Container>

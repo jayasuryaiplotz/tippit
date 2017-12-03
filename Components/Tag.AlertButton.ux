@@ -1,0 +1,15 @@
+<Panel ux:Class="Tag.AlertButton" Height="44" HitTestMode="LocalBounds" TextColor="#2196f3">
+    <string ux:Property="Text" />
+    <string ux:Property="TextColor" />
+
+    <Text ux:Name="Button_Text" Value="{Property this.Text}" TextColor="{Property this.TextColor}" Alignment="Center" TextAlignment="Center" Margin="10" />
+    
+    <Rectangle ux:Name="overlayColor" CornerRadius="2" Opacity="0">
+        <SolidColor Color="#999999" />
+    </Rectangle>
+
+     <WhilePressed>
+        <Change overlayColor.Opacity="1" Duration=".15" Easing="CubicInOut" />
+    </WhilePressed>
+
+</Panel>

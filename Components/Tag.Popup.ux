@@ -1,0 +1,59 @@
+<Container ux:Class="Tag.Popup" Subtree="innerPanel" HeaderBackground="#3e3c3e">
+    <string ux:Property="Title"/>
+    <object ux:Property="ShowPopup"/>
+
+    <float4 ux:Property="HeaderBackground"/>
+	
+    
+    <WhileTrue ux:Name="DisplayStatus" Value="{Property this.ShowPopup}" ux:Binding="Children">
+        <BringToFront Target="dataArea" />
+		<Change fullRegionRoot.IsEnabled="true"/>
+    </WhileTrue>
+
+	<AlternateRoot ParentNode="{Resource FullWindow}" IsEnabled="false" ux:Name="fullRegionRoot" ux:Binding="Children">
+        <DockPanel ux:Name="dataArea" >
+            <StatusBarBackground Dock="Top" />
+            <BottomBarBackground Dock="Bottom" IncludesKeyboard="true" />
+
+		    <Panel>
+                <DockPanel  Width="100%" MaxWidth="360" Alignment="Center" >
+
+                    <Panel ux:Name="titleArea" Height="50" Dock="Top" >
+                        <HeaderText Value="{Property this.Title}" Alignment="CenterLeft" Margin="20" Color="{Resource Tag.WhiteTextColor}" >
+                            <WhileContainsText Invert="true">
+                                <Change titleArea.Visibility="Collapsed" />
+                            </WhileContainsText>
+                        </HeaderText>
+                        <Panel Width="44" Height="44" Alignment="CenterRight" Margin="0,0,0,10" HitTestMode="LocalBoundsAndChildren">
+                            <CloseIcon />
+                            <Clicked>
+                                 <Toggle Target="DisplayStatus" /> 
+                            </Clicked>
+                        </Panel>
+
+                        <Rectangle Color="{ReadProperty this.HeaderBackground}" Layer="Background" />
+                    </Panel>
+
+                    <Panel ux:Name="innerPanel"  />
+
+                    <Rectangle Color="#fff" Layer="Background" />
+                    <Shadow  Mode="Background"/>
+
+                </DockPanel>
+
+
+                <Rectangle Color="#000" Opacity=".6" Layer="Background" >  
+                    <Clicked>
+                         <Toggle Target="DisplayStatus" /> 
+                    </Clicked>
+                </Rectangle>  
+            </Panel>
+        </DockPanel>
+	</AlternateRoot>
+</Container>
+
+
+
+
+
+    

@@ -1,0 +1,7 @@
+<ux:Resources>
+
+    <Tag.Button ux:Class="Tag.RedButton" ButtonColor="#e44934" />
+    <Tag.Button ux:Class="Tag.GreenButton" ButtonColor="#269014" />
+    <Tag.Button ux:Class="Tag.GrayButton" ButtonColor="#a8a5a5" />
+
+</ux:Resources>

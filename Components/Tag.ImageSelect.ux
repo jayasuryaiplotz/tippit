@@ -1,0 +1,12 @@
+ <Tag.Popup ux:Class="Tag.ImageSelect" Title="SELECT IMAGE" >
+
+    <JavaScript File="Tag.ImageSelect.js" />
+
+    <StackPanel ItemSpacing="10" Margin="10"  >
+        <Tag.RedButton Text="Take Picture" Clicked="{takePicture}"/>
+        <Tag.RedButton Text="Select Picture" Clicked="{selectPicture}"/>
+    </StackPanel>
+
+    <OnUserEvent ux:Class="ImageSelcted" EventName="imageSelcted" />
+	<UserEvent ux:Name="imageSelcted" />
+</Tag.Popup>

@@ -1,0 +1,150 @@
+<Page ux:Class="LoginCompletePage" >
+    <Router ux:Dependency="router" />
+
+    <JavaScript File="LoginCompletePage.js" />
+
+    <Activated Path="Local">
+        <Callback Handler="{onViewActivate}"/>
+    </Activated>
+
+    <Busy IsActive="false" ux:Name="busy"/>
+    <WhileBusy>
+        <Change loadingPanel.Opacity="1" Duration=".4" />
+    </WhileBusy>
+
+    <LoadingIndicator ux:Name="loadingPanel" Opacity="0"  ThemeColor="#e44934" />
+
+<Panel ux:Class="BlockItem" Height="6" Width="6" >
+        <string ux:Property="FillColorStatus" />
+        
+        <Match Value="{Property FillColorStatus}">
+            <Case String="1">
+                <Rectangle Width="6" Height="6" Color="#000"/>
+            </Case>
+            <Case String="0">
+                <Rectangle Width="6" Height="6" Color="#fff"/>
+            </Case>
+        </Match>
+    </Panel>
+
+    <DockPanel>
+        <Panel Dock="Top" Height="44"  >
+                <Grid Columns="auto,1*,auto" >
+                    <Panel Width="100" >
+
+                    </Panel>
+
+                    <HeaderText Value="BALANCE - {balanceText} PHP" A  />
+
+                     <Panel Width="50" >
+                           
+
+                    </Panel>
+                </Grid>
+
+                <Rectangle Layer="Background" Color="#f00" />
+            </Panel>
+
+		<Panel>
+            <WobbleButton Width="300" Height="300" Alignment="BottomRight" Offset="100,100" />
+
+            <StackPanel Margin="40" >
+                <Panel Width="168" Height="168" Alignment="HorizontalCenter" >
+                    <StackPanel ItemSpacing="0">
+                        <Each Items="{fiatChainQrData}" >
+                            <Panel Height="6" >
+                                <StackPanel Orientation="Horizontal" ItemSpacing="0">
+                                    <Each Items="{}" >
+                                        <BlockItem FillColorStatus="{}" />
+                                    </Each>
+                                </StackPanel>
+                            </Panel>
+                        </Each>
+                    </StackPanel>
+
+                    <!-- <Clicked>
+                        <Callback Handler="{qrClipboardCopyHandler}" />
+                    </Clicked> -->
+                </Panel>
+                <HeaderText Value="{fiatChainData}" TextAlignment="Center" />
+            </StackPanel>
+			
+		</Panel>
+
+    </DockPanel>
+
+
+    <Panel ux:Class="WobbleButton" ux:Name="self" TransformOrigin="Center">
+        <Cross ux:Name="cross" HitTestMode="None"/>
+
+        <ClockIcon ux:Name="icon1" Margin="20,30,0,20" Width="30" Height="30" Alignment="Left" Opacity="0" IsEnabled="false">
+            <Translation ux:Name="trans1" X="1.5" RelativeTo="Size" />
+            <Clicked>
+                <Toggle Target="expanded" />
+                <Callback  Handler="{giftSendClicked}" />
+            </Clicked>
+        </ClockIcon>
+        <TalkIcon ux:Name="icon2" Margin="60,60,0,0" Width="30" Height="30" Alignment="TopLeft" Opacity="0" IsEnabled="false">
+            <Translation ux:Name="trans2" X="1" Y="1" RelativeTo="Size" />
+            <Clicked>
+                <Toggle Target="expanded" />
+                <Callback  Handler="{qrScanClicked}" />
+            </Clicked>
+        </TalkIcon>
+
+        <LocationIcon ux:Name="icon3" Margin="60,30,20,0" Width="30" Height="30" Alignment="Top" Opacity="0" IsEnabled="false">
+            <Translation ux:Name="trans3" Y="1.5" RelativeTo="Size" />
+            <Clicked>
+                <Toggle Target="expanded" />
+                <Callback  Handler="{emailSendClicked}" />
+            </Clicked>
+        </LocationIcon>
+
+        <LocationIcon ux:Name="icon4" Margin="60,40,20,0" Width="30" Height="30" Alignment="Top" Opacity="0" IsEnabled="false">
+            <Translation ux:Name="trans4" Y="1.5" RelativeTo="Size" />
+            <Clicked>
+                <Toggle Target="expanded" />
+                <Callback  Handler="{bankSendClicked}" />
+            </Clicked>
+        </LocationIcon>
+
+
+        <Circle ux:Name="overlayCircle" Color="#0004" Opacity="0" Width="20%" Height="20%" Alignment="Center" >
+            <Clicked>
+                <Toggle Target="expanded" />
+            </Clicked>
+        </Circle>
+        <Circle ux:Name="circle" Color="#F23363" Width="20%" Height="20%" >
+
+        </Circle>
+
+        <WhileTrue ux:Name="enableOptions">
+            <Change icon1.IsEnabled="true" />
+            <Change icon2.IsEnabled="true" />
+            <Change icon3.IsEnabled="true" />
+            <!-- <Change icon4.IsEnabled="true" /> -->
+        </WhileTrue>
+
+        <WhileTrue ux:Name="expanded">
+            <Change circle.Height="100%" Easing="CubicInOut" Duration="0.2" DelayBack="0"/>
+            <Change circle.Width="100%" Easing="CubicInOut" Duration="0.2"  DelayBack="0"/>
+
+            <Change enableOptions.Value="true" Delay="0.1" />
+            <Change overlayCircle.Opacity="1" Delay="0.1" Duration="0.1" />
+            <Rotate Target="cross" Degrees="-45" Duration="0.2" Easing="CubicInOut" />
+
+            <Change trans1.X="0" Delay="0" Duration="0.4" Easing="BounceOut" EasingBack="QuadraticInOut" DurationBack="0.2"    DelayBack="0"/>
+            <Change trans2.X="0" Delay="0.05" Duration="0.4" Easing="BounceOut" EasingBack="QuadraticInOut" DurationBack="0.2" DelayBack="0"/>
+            <Change trans2.Y="0" Delay="0.05" Duration="0.4" Easing="BounceOut" EasingBack="QuadraticInOut" DurationBack="0.2" DelayBack="0"/>
+            <Change trans3.Y="0" Delay="0.1" Duration="0.4" Easing="BounceOut" EasingBack="QuadraticInOut" DurationBack="0.2"  DelayBack="0"/>
+
+            <Change icon1.Opacity="1" Delay="0.1" Duration="0.1" Easing="QuadraticInOut" DelayBack="0"/>
+            <Change icon2.Opacity="1" Delay="0.1" Duration="0.1" Easing="QuadraticInOut" DelayBack="0"/>
+            <Change icon3.Opacity="1" Delay="0.1" Duration="0.1" Easing="QuadraticInOut" DelayBack="0"/>
+        </WhileTrue>
+
+    </Panel>
+
+
+			
+</Page>

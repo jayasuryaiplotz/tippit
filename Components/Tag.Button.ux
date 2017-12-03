@@ -1,0 +1,24 @@
+<Panel ux:Class="Tag.Button" Height="44" HitTestMode="LocalBounds" ButtonColor="#e44934">
+    <string ux:Property="Text" />
+    <string ux:Property="ButtonColor" />
+
+    <Text ux:Name="Button_Text" Value="{Property this.Text}" TextColor="#fff" Alignment="Center" TextAlignment="Center" Margin="10" />
+    
+    <Rectangle ux:Name="overlayColor" CornerRadius="2" Opacity="0">
+        <SolidColor Color="#000" Opacity=".12" />
+    </Rectangle>
+    <Rectangle CornerRadius="2" >
+      <SolidColor ux:Name="backColor" Color="{Property this.ButtonColor}" />
+    </Rectangle>
+
+     <WhilePressed>
+        <Change overlayColor.Opacity="1" Duration=".15" Easing="CubicInOut" />
+    </WhilePressed>
+
+    <WhileDisabled>
+       <Change backColor.Opacity=".4" Duration=".15" />
+       <Change Button_Text.Opacity=".4" Duration=".15" />
+    </WhileDisabled>
+
+    <Shadow Mode="Background" Distance=".2" Size="2" />
+</Panel>

@@ -1,0 +1,47 @@
+<TextInput ux:Class="Tag.TextInput" ux:Name="textInput" Margin="0,8,0,0" PlaceholderColor="{Resource Tag.HintTextColor}" CaretColor="#456ce1" >
+
+    <string ux:Property="HintText" />
+
+    <float4 ux:Key="CLine" ux:Value="#e0e0e0"/>
+    <float4 ux:Key="CLineFocus" ux:Value="#2196f3"/>
+
+    <StateGroup Active="idle" ux:Name="stategroup" >
+        <State ux:Name="idle" >
+            <Move Target="placeholder" Duration="0.42" Easing="ExponentialOut" EasingBack="ExponentialIn" RelativeTo="Size" Y="0" />
+        </State>
+
+        <State ux:Name="active" >
+            <Move Target="placeholder" Duration="0.42" Easing="ExponentialOut" EasingBack="ExponentialIn" RelativeTo="Size" Y="-.7" />
+            <Scale Target="placeholder" Duration="0.42" Easing="ExponentialOut" EasingBack="ExponentialIn" Factor="0.8" /> 
+        </State>
+    </StateGroup>
+
+    <WhileFocused>
+        <Change stategroup.Active="active" />
+        <Change Duration="0.25" Easing="ExponentialOut" EasingBack="ExponentialIn" Target="textInputDivider.Color" Value="{Resource CLineFocus}"/>
+        <Change Duration="0.25" Easing="ExponentialOut" EasingBack="ExponentialIn" Target="dividerRect.Height" Value="2" /> 
+    </WhileFocused>
+
+    <WhileNotFocused>
+        <WhileContainsText >
+            <Change stategroup.Active="active" />
+        </WhileContainsText>
+    </WhileNotFocused>
+
+    <Text ux:Name="placeholder" Value="{ReadProperty textInput.HintText}" Alignment="TopLeft" TransformOrigin="TopLeft"
+			      Font="{ReadProperty textInput.Font}" FontSize="{ReadProperty textInput.FontSize}" TextColor="{ReadProperty textInput.PlaceholderColor}" />
+
+    <DockPanel Layer="Background">
+        <Rectangle ux:Name="dividerRect" Height="1" Dock="Bottom">
+            <SolidColor ux:Name="textInputDivider" Color="{Resource CLine}" />
+        </Rectangle>
+    </DockPanel>
+     
+
+    <!-- <WhileDisabled>
+        <Change Duration="0.25" Easing="ExponentialOut" EasingBack="ExponentialIn" Target="_textInput.TextColor" Value="{Resource CLine}" />
+        <Change Duration="0.25" Easing="ExponentialOut" EasingBack="ExponentialIn" Target="_textInputDivider.Color" Value="{Resource CLine}" />
+    </WhileDisabled> -->
+		
+
+</TextInput>

@@ -1,0 +1,39 @@
+<App>
+    <Router ux:Name="router" />
+
+    <JavaScript>
+        var Localization = require("Locales/Localization");
+        var EventEmitter = require("FuseJS/EventEmitter");
+
+        tagEvents = new EventEmitter("toastShow","alertEvent");
+
+        module.exports = {
+            loc: Localization.loc,
+            tagEvents: tagEvents,
+        };
+    </JavaScript>
+
+
+    <Tag.Toast/>
+    <MessageAlert />
+
+    <Panel ux:Name="FullWindow" />
+    <ResourceObject Key="FullWindow" Value="FullWindow"/>
+            
+    <DockPanel Background="#fff">
+
+        <StatusBarBackground Dock="Top" Background="#909498"/>
+        <!-- <BottomFrameBackground Dock="Bottom" /> -->
+
+        <Navigator ux:Name="navigator" DefaultPath="loginPage" >
+            <LoginPage ux:Template="loginPage" router="router"/>
+            <ForgotPasswordPage ux:Template="forgotPasswordPage" router="router" />
+            <RegisterUserPage ux:Template="registerUserPage" router="router" />
+
+            <LoginCompletePage ux:Template="loginCompletePage" router="router"/>
+
+        </Navigator>
+
+    </DockPanel>
+
+</App>
