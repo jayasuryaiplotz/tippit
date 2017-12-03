@@ -1,12 +1,12 @@
 var Observable = require('FuseJS/Observable');
 
 var accessToken;
+var userId;
 var phpFiatChain;
 
-var userprofileDetails = Observable("");
 
 module.exports = {
     accessToken: accessToken,
     phpFiatChain:phpFiatChain,
-    userprofileDetails: userprofileDetails,
+    userId: userId,
 };

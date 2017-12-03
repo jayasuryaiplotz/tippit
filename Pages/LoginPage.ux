@@ -19,7 +19,11 @@
     <LoadingIndicator ux:Name="loadingPanel" Opacity="0"  ThemeColor="#e44934" />
 
     <DockPanel>
-        <StackPanel ux:Name="inputArea" Margin="10,60" MaxWidth="360" ItemSpacing="20" >
+        <StackPanel ux:Name="logoArea" Margin="50,50" MaxWidth="120" ItemSpacing="20" >
+                <Image File="../Assets/tippit_logo.png" />
+        </StackPanel>
+
+        <StackPanel ux:Name="inputArea" Margin="50,200" MaxWidth="360" ItemSpacing="20" >
             <Panel>
                 <EmailIco Color="{Resource Tag.LoginInputIcon}" Margin="10,0,0,0" Width="26" Alignment="CenterLeft" />
                 <Tag.IconTextInput ux:Name="tiEmail" Value="{emailValue}" PlaceholderText="{loc.email}" InputHint="Email" ActionStyle="Next"  />
@@ -30,6 +34,10 @@
             </Panel>
             
             <Tag.RedButton Text="{loc.tag_login}" Clicked="{login_clicked}"  />
+            <Button Text="Facebook Login" Height="50">
+                <Text TextColor="#000000" />
+                <SolidColor Color="#3b599a"/>
+            </Button>
             <!-- <Tag.RedButton Text="{loc.fb_login}" IsEnabled="false" Clicked="{fb_login_clicked}"  /> -->
         </StackPanel>
 

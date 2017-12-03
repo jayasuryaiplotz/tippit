@@ -2,7 +2,12 @@
   "RootNamespace":"",
   "Packages": [
     "Fuse",
-    "FuseJS"
+    "FuseJS",
+    "Fuse.Platform",
+    "Fuse.Scripting",
+    "Uno.Permissions",
+    "Uno.Threading",
+    "Android.ActivityUtils",
   ],
   "Includes": [
     "*",
@@ -10,6 +15,8 @@
     "Models/*.js:Bundle",
     "Locales/*.js:Bundle",
     "Locales/*.json:Bundle",
+    "QrScanner.uno",
+    "ZBarScannerActivity.java:Java:Android",
   ],
   "Mobile": {
     "Orientations": "Portrait"

@@ -16,7 +16,7 @@
             <BottomBarBackground Dock="Bottom" IncludesKeyboard="true" />
 
 		    <Panel>
-                <DockPanel  Width="100%" MaxWidth="360" Alignment="Center" >
+                <DockPanel  Width="100%" MaxWidth="340" Alignment="Center" >
 
                     <Panel ux:Name="titleArea" Height="50" Dock="Top" >
                         <HeaderText Value="{Property this.Title}" Alignment="CenterLeft" Margin="20" Color="{Resource Tag.WhiteTextColor}" >

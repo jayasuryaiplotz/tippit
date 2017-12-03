@@ -14,7 +14,7 @@
 
     <LoadingIndicator ux:Name="loadingPanel" Opacity="0"  ThemeColor="#e44934" />
 
-<Panel ux:Class="BlockItem" Height="6" Width="6" >
+    <Panel ux:Class="BlockItem" Height="6" Width="6" >
         <string ux:Property="FillColorStatus" />
         
         <Match Value="{Property FillColorStatus}">
@@ -27,14 +27,109 @@
         </Match>
     </Panel>
 
-    <DockPanel>
-        <Panel Dock="Top" Height="44"  >
-                <Grid Columns="auto,1*,auto" >
-                    <Panel Width="100" >
 
+    <Tag.Popup ShowPopup="{giftSendPopupShow}" >
+
+        <StackPanel ItemSpacing="50" Margin="20" >
+            <Tag.TextInput Value="{amountInputGift}" HintText="Amount" InputHint="Decimal"/>
+                
+            <Tag.RedButton Text="GENERATE QR" Clicked="{giftQRHandler}"/>
+                
+            <Panel Width="168" Height="168" Alignment="HorizontalCenter" >
+                <StackPanel ItemSpacing="0">
+                    <Each Items="{giftQrData}" >
+                        <Panel Height="6" >
+                            <StackPanel Orientation="Horizontal" ItemSpacing="0">
+                                <Each Items="{}" >
+                                    <BlockItem FillColorStatus="{}" />
+                                </Each>
+                            </StackPanel>
+                        </Panel>
+                    </Each>
+                </StackPanel>
+            </Panel>
+
+            <Tag.GrayButton Text="CANCEL" Clicked="{popupCloseClicked}"/>
+        </StackPanel>
+
+    </Tag.Popup>
+
+    <Tag.Popup ShowPopup="{sendAddressPopupShow}" >
+
+        <StackPanel ItemSpacing="20" Margin="20" >
+                <Tag.TextInput Value="{amountSendAddress}" HintText="Amount" InputHint="Decimal"/>
+
+            <Grid Height="50" CellSpacing="10" ColumnCount="2" >
+                <Tag.GrayButton Text="CANCEL" Clicked="{popupCloseClicked}"/>
+                <Tag.RedButton Text="SEND" Clicked="{transferAamoundToAddress}"/>
+            </Grid>
+        </StackPanel>
+
+    </Tag.Popup>
+
+    <Tag.Popup ShowPopup="{sendEmailPopupShow}" >
+
+        <StackPanel ItemSpacing="20" Margin="20" >
+                <Tag.TextInput Value="{amountInputEmail}" HintText="Amount" InputHint="Decimal"/>
+                <Tag.TextInput Value="{userEmailInput}" HintText="Email" InputHint="Email" />
+
+            <Grid Height="50" CellSpacing="10" ColumnCount="2" >
+                <Tag.GrayButton Text="CANCEL" Clicked="{popupCloseClicked}"/>
+                <Tag.RedButton Text="SEND" Clicked="{transferButton_clickHandler}"/>
+            </Grid>
+        </StackPanel>
+
+    </Tag.Popup>
+
+    <Tag.Popup  ShowPopup="{sendBankPopupShow}" >
+
+        <StackPanel ItemSpacing="10" Margin="20" >
+              <Grid Columns="1*,1*" CellSpacing="10">
+                <Panel>
+                    <StackPanel ItemSpacing="10">
+                        <Panel Background="#f00" >
+                            <HeaderText Value="CASH IN" Color="#fff" Padding="0"  Alignment="Center"/>
+                        </Panel>
+                        <Tag.TextInput Value="{amountInputEleven}" HintText="Amount" InputHint="Decimal"/>
+
+                        <Tag.GrayButton Text="7-Eleven" />
+                        <Tag.GrayButton Text="BANK" />
+                    </StackPanel>
+                </Panel>
+
+                <Panel>
+                    <StackPanel ItemSpacing="10">
+                        <Panel Background="#f00" >
+                            <HeaderText Value="TO BANK" Color="#fff" Padding="0" Alignment="Center" />
+                        </Panel>
+                        <Tag.TextInput Value="{amountInputBank}" HintText="Amount" InputHint="Decimal"/>
+
+                        <Tag.GrayButton Text="105166957509" />
+                        <Tag.GrayButton Text="SEND" Clicked="{bankTransferHandler}"/>
+                    </StackPanel>
+                </Panel>
+
+              </Grid>
+
+            <Tag.GrayButton Text="CANCEL" Clicked="{popupCloseClicked}"/>
+        </StackPanel>
+
+    </Tag.Popup>
+
+
+    <DockPanel >
+        <Panel Dock="Top" Height="60"  >
+                <Grid Columns="auto,1*,auto"  >
+                    <Panel Width="100" >
+                        <Image File="../Assets/tippit_logo.png" Height="40" Margin="-30,0,0,0" />
                     </Panel>
 
-                    <HeaderText Value="BALANCE - {balanceText} PHP" A  />
+                    <Panel HitTestMode="LocalBoundsAndChildren"  >
+                        <HeaderText Value="BALANCE - {balanceText} PHP" Alignment="Center" Color="#fff"  />
+                        <Clicked>
+                            <Callback Handler="{loadUserWalletTotalCall}" />
+                        </Clicked>
+                    </Panel>
 
                      <Panel Width="50" >
                            
@@ -48,8 +143,8 @@
 		<Panel>
             <WobbleButton Width="300" Height="300" Alignment="BottomRight" Offset="100,100" />
 
-            <StackPanel Margin="40" >
-                <Panel Width="168" Height="168" Alignment="HorizontalCenter" >
+            <StackPanel Margin="10,40,0,0" >
+                <Panel Width="168" Height="200" Alignment="HorizontalCenter" >
                     <StackPanel ItemSpacing="0">
                         <Each Items="{fiatChainQrData}" >
                             <Panel Height="6" >
@@ -84,7 +179,7 @@
                 <Callback  Handler="{giftSendClicked}" />
             </Clicked>
         </ClockIcon>
-        <TalkIcon ux:Name="icon2" Margin="60,60,0,0" Width="30" Height="30" Alignment="TopLeft" Opacity="0" IsEnabled="false">
+        <TalkIcon ux:Name="icon2" Margin="40,90,0,0" Width="30" Height="30" Alignment="TopLeft" Opacity="0" IsEnabled="false">
             <Translation ux:Name="trans2" X="1" Y="1" RelativeTo="Size" />
             <Clicked>
                 <Toggle Target="expanded" />
@@ -92,7 +187,7 @@
             </Clicked>
         </TalkIcon>
 
-        <LocationIcon ux:Name="icon3" Margin="60,30,20,0" Width="30" Height="30" Alignment="Top" Opacity="0" IsEnabled="false">
+        <LocationIcon ux:Name="icon3" Margin="0,40,20,0" Offset="-35,0" Width="30" Height="30" Alignment="Top" Opacity="0" IsEnabled="false">
             <Translation ux:Name="trans3" Y="1.5" RelativeTo="Size" />
             <Clicked>
                 <Toggle Target="expanded" />
@@ -100,13 +195,13 @@
             </Clicked>
         </LocationIcon>
 
-        <LocationIcon ux:Name="icon4" Margin="60,40,20,0" Width="30" Height="30" Alignment="Top" Opacity="0" IsEnabled="false">
+        <BankIcon ux:Name="icon4" Margin="60,30,20,0" Width="30" Height="30" Alignment="Top" Opacity="0" IsEnabled="false">
             <Translation ux:Name="trans4" Y="1.5" RelativeTo="Size" />
             <Clicked>
                 <Toggle Target="expanded" />
                 <Callback  Handler="{bankSendClicked}" />
             </Clicked>
-        </LocationIcon>
+        </BankIcon>
 
 
         <Circle ux:Name="overlayCircle" Color="#0004" Opacity="0" Width="20%" Height="20%" Alignment="Center" >
@@ -114,15 +209,14 @@
                 <Toggle Target="expanded" />
             </Clicked>
         </Circle>
-        <Circle ux:Name="circle" Color="#F23363" Width="20%" Height="20%" >
+        <Circle ux:Name="circle" Color="#F00" Width="20%" Height="20%" />
 
-        </Circle>
 
         <WhileTrue ux:Name="enableOptions">
             <Change icon1.IsEnabled="true" />
             <Change icon2.IsEnabled="true" />
             <Change icon3.IsEnabled="true" />
-            <!-- <Change icon4.IsEnabled="true" /> -->
+            <Change icon4.IsEnabled="true" />
         </WhileTrue>
 
         <WhileTrue ux:Name="expanded">
@@ -137,10 +231,12 @@
             <Change trans2.X="0" Delay="0.05" Duration="0.4" Easing="BounceOut" EasingBack="QuadraticInOut" DurationBack="0.2" DelayBack="0"/>
             <Change trans2.Y="0" Delay="0.05" Duration="0.4" Easing="BounceOut" EasingBack="QuadraticInOut" DurationBack="0.2" DelayBack="0"/>
             <Change trans3.Y="0" Delay="0.1" Duration="0.4" Easing="BounceOut" EasingBack="QuadraticInOut" DurationBack="0.2"  DelayBack="0"/>
+            <Change trans4.Y="0" Delay="0.15" Duration="0.4" Easing="BounceOut" EasingBack="QuadraticInOut" DurationBack="0.2"  DelayBack="0"/>
 
             <Change icon1.Opacity="1" Delay="0.1" Duration="0.1" Easing="QuadraticInOut" DelayBack="0"/>
             <Change icon2.Opacity="1" Delay="0.1" Duration="0.1" Easing="QuadraticInOut" DelayBack="0"/>
             <Change icon3.Opacity="1" Delay="0.1" Duration="0.1" Easing="QuadraticInOut" DelayBack="0"/>
+            <Change icon4.Opacity="1" Delay="0.1" Duration="0.1" Easing="QuadraticInOut" DelayBack="0"/>
         </WhileTrue>
 
     </Panel>

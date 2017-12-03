@@ -5,19 +5,15 @@ var _model = require('Models/GlobalModel');
 var _WebService = require('Models/WebService');
 
 
-// var emailValue = Observable("");
-// var passwordValue = Observable("");
-
-var emailValue = Observable("jayasurya@iplotz.com");
-var passwordValue = Observable("vtcindia33#");
-
+var emailValue = Observable("");
+var passwordValue = Observable("");
 
 var status = 0;
 var response_ok = false;
 
 function onViewActivate() {
     console.log("onLoginViewStart readTextFromFile");
-    
+
     var emailStored = Preferences.read("email", false);
     console.log("emailStored " + emailStored);
     if (emailStored) {
@@ -57,58 +53,27 @@ function gotLoginResult(loginResult) {
 
 }
 
-
-
 function logedInDataProcess(resultObj) {
     console.log("logedInDataProcess")
     console.log(JSON.stringify(resultObj))
 
     _model.accessToken = resultObj.access_token;
     Preferences.write("access_token", resultObj.access_token);
-    
+
     _model.phpFiatChain = resultObj.crypto_addresses.managed.php_fiat_chain;
+    _model.userId = resultObj.id;
+    router.goto("loginCompletePage");
 
-        router.goto("loginCompletePage");
-
-    
-
-    // profileUserDetailsLoad();
 }
 
-// function profileUserDetailsLoad() {
-//     busy.activate();
-    
-//     _WebService.request("user/profile").then(function (result) {
-//         gotProfileResult(result);
-//     }).catch(function (error) {
-//         console.log("Couldn't get data: " + error);
-//     });
-// }
 
-// function gotProfileResult(result) {
-//     console.log("gotProfileResult")
-//     busy.deactivate();
-    
-//     var arr = result;
-//     console.log(JSON.stringify(arr))
+function forgotPassword_clickHandler() {
+    router.push("forgotPasswordPage");
+}
 
-//     if (arr.status == "success") {
-//         var resultObj = arr.result;
-//         _model.userprofileDetails.value = resultObj;
-
-//         router.goto("loginCompletePage");
-//     }
-
-// }
-
-
-// function forgotPassword_clickHandler() {
-//     router.push("forgotPasswordPage");
-// }
-
-// function registerButton_clickHandler() {
-//     router.push("registerUserPage");
-// }
+function registerButton_clickHandler() {
+    router.push("registerUserPage");
+}
 
 
 module.exports = {
@@ -116,6 +81,6 @@ module.exports = {
     login_clicked: login_clicked,
     emailValue: emailValue,
     passwordValue: passwordValue,
-    // forgotPassword_clickHandler: forgotPassword_clickHandler,
-    // registerButton_clickHandler: registerButton_clickHandler
+    forgotPassword_clickHandler: forgotPassword_clickHandler,
+    registerButton_clickHandler: registerButton_clickHandler
 }

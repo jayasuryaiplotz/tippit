@@ -538,6 +538,27 @@ function apiSevenDepositTransactions(Id, type) {
 
 
 
+
+function apiTagcoinTransferAddress(amount, toType, toId, narration, fromWallet) {
+    var data = "access_token=" + _model.accessToken + "&amount=" + amount + "&to_type=" + toType + "&from_wallet_id=" + fromWallet + "&to_wallet_id=" + fromWallet + "&narration=" + narration + "&to_id=" + toId;
+    console.log(data)
+
+    return fetch(_url + "wallet/transfer", {
+        method: 'post',
+        headers: { "Content-type": "application/x-www-form-urlencoded; charset=UTF-8" },
+        body: data
+    }).then(function (response) {
+        return response.json();
+    }).then(function (responseObject) {
+        return new Promise(function (resolve, reject) {
+            resolve(responseObject);
+        });
+    }).catch(function (err) {
+        console.log(JSON.stringify(err))
+    });
+}
+
+
 module.exports =
     {
         apiAuthenticate: apiAuthenticate,
@@ -572,6 +593,6 @@ module.exports =
 
         apiBanksList: apiBanksList,
 
-
+        apiTagcoinTransferAddress:apiTagcoinTransferAddress,
 
     };
