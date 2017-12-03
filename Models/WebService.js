@@ -9,7 +9,7 @@ _serverurl = "https://api.tagcash.com/";
 
 
 function apiAuthenticate(email, password) {
-    var data = "client_id=7461675f68785f69e65&client_secret=746167626f6e645f686966785f6970686f6&grant_type=password&user_email=" + encodeURIComponent(email) + "&user_password=" + encodeURIComponent(password);
+    var data = "client_id=XXXX&client_secret=XXXX&grant_type=password&user_email=" + encodeURIComponent(email) + "&user_password=" + encodeURIComponent(password);
 
     return fetch(_serverurl + "oauth/accesstoken", {
         method: 'post',
@@ -27,7 +27,7 @@ function apiAuthenticate(email, password) {
 }
 
 function apiUserRegistration(email, firstName, lastName, password) {
-    var data = "client_id=7461675f68785f69e65&client_secret=746167626f6e645f686966785f6970686f6&user_email=" + encodeURIComponent(email) + "&user_firstname=" + firstName + "&user_lastname=" + lastName + "&user_password=" + encodeURIComponent(password);
+    var data = "client_id=XXXX&client_secret=ZZZZ&user_email=" + encodeURIComponent(email) + "&user_firstname=" + firstName + "&user_lastname=" + lastName + "&user_password=" + encodeURIComponent(password);
 
     return fetch(_serverurl + "registration", {
         method: 'post',
@@ -45,7 +45,7 @@ function apiUserRegistration(email, firstName, lastName, password) {
 }
 
 function apiForgotPassword(email, password) {
-    var data = "client_id=7461675f68785f69e65&client_secret=746167626f6e645f686966785f6970686f6&user_email=" + encodeURIComponent(email);
+    var data = "client_id=XXXX&client_secret=ZZZZ&user_email=" + encodeURIComponent(email);
 
     return fetch(_serverurl + "registration/resetpassword", {
         method: 'post',
