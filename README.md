@@ -1,7 +1,8 @@
-A simple Tipping app bult with Fusetools, originally built over 24 hours at Uhack Hackathon in Manila Philippines.
+A simple Tipping app bult with Fusetools, originally built over 24 hours at Uhack Hackathon in Manila Philippines. Developers are Mark Vernon, Jayasurya, John Tan and Herman  
 
 The app uses the Tagcash.com API (http://developer.tagcash.com) and the Tagcash Fiat Blockchain. Mode details on the blockchain and how to connect to it at http://tagcash.com
 
+When developing the app, you will need a client_id and client_secret which you can get from tagcash.com or developer.tagcash.com websites
 
 There are 3 ways to tip
 
