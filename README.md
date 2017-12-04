@@ -22,3 +22,5 @@ Roadmap for future development - Contributions welcome
 6. Add other currencies from Tagcash chains (both Fiat and Tokens)
 7. Add narration and option for anonymous donation
 8. Improve overall design
+9. Add extra button to request a tip (is that called begging icon?)
+10. Add Sonic Payment for gifts and requests
