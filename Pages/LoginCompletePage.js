@@ -1,24 +1,28 @@
 var Observable = require('FuseJS/Observable');
-var qrEncoder = require("Utils/QrEncoder");
 var QrScanner = require("QrScanner");
 var Validator = require('Utils/Validator');
+var Preferences = require('Utils/Preferences');
 
 var _model = require('Models/GlobalModel');
 var _WebService = require('Models/WebService');
 
 var balanceText = Observable(0);
 var fiatChainData = Observable();
-var fiatChainQrData = Observable();
+var fiatChainQRData = Observable();
 
 function onViewActivate() {
-    fiatChainQrData.clear();
     var phpFiatChainStr = _model.phpFiatChain.toString();
     var userIdStr = _model.userId.toString();
-    fiatChainData.value = phpFiatChainStr;
+    console.log(phpFiatChainStr);
 
-    //var bitMatrix = qrEncoder.encode(phpFiatChainStr, 1);
-    var bitMatrix = qrEncoder.encode(userIdStr, 1);
-    fiatChainQrData.addAll(bitMatrix);
+    var qrDataObj = {};
+    qrDataObj.tagqr = true;
+    qrDataObj.type = "address";
+    qrDataObj.address = phpFiatChainStr;
+    console.log(JSON.stringify(qrDataObj))
+
+    fiatChainQRData.value = JSON.stringify(qrDataObj);
+    fiatChainData.value = phpFiatChainStr;
 
     loadUserWalletTotalCall();
 }
@@ -51,25 +55,96 @@ function gotLoadEnergyTotalResult(result) {
 }
 
 
-var giftSendPopupShow = Observable(false);
-var sendAddressPopupShow = Observable(false);
-var amountInputGift = Observable();
-var giftQrData = Observable();
-function giftSendClicked() {
-    giftSendPopupShow.value = true;
-    amountInputGift.value = "";
-    giftQrData.clear();
+var transactionListData = Observable();
+
+function loadTransactions() {
+    console.log("loadTransactions")
+    transactionListData.clear();
+    busy.activate();
+
+    var apiBodyObj = {};
+    apiBodyObj.from_wallet_id = 1;
+
+    _WebService.request("wallet/transactions", apiBodyObj).then(function (result) {
+        gotLoadTransactionsResult(result);
+    }).catch(function (error) {
+        console.log("Couldn't get data: " + error);
+        showNetworkErrorMessage();
+    });
+
+    // @Query("offset") int offset,
+    // @Query("count") int count);-
 
 }
 
-function giftQRHandler() {
+function gotLoadTransactionsResult(result) {
+    console.log("gotLoadTransactionsResult")
+    busy.deactivate();
+
+    var arr = result;
+    console.log(JSON.stringify(arr))
+
+    if (arr.status == "success") {
+        var resultArr = arr.result;
+        if (resultArr !== null) {
+            transactionListData.addAll(resultArr);
+        }
+
+    }
+}
+
+var giftSendPopupShow = Observable(false);
+var sendAddressPopupShow = Observable(false);
+var amountInputGift = Observable();
+var giftQrData = Observable("");
+function giftSendClicked() {
+    giftSendPopupShow.value = true;
+    amountInputGift.value = "";
+    giftQrData.value = "";
+}
+
+function generateVoucherHandler() {
     if (!Validator.amount(amountInputGift.value)) {
         tagEvents.emit("toastShow", { message: "Amount should not be empty" });
         return;
     }
 
-    var bitMatrix = qrEncoder.encode(amountInputGift.value, 1);
-    giftQrData.addAll(bitMatrix);
+    busy.activate();
+
+    var apiBodyObj = {};
+
+    apiBodyObj.amount = amountInputGift.value;
+    // 1, hour , 2 day ,  3 seconds
+    apiBodyObj.expiration_type = 3;
+    apiBodyObj.expires_at = 60;
+    apiBodyObj.open = 1;
+    apiBodyObj.wallet_id = 1;
+    apiBodyObj.voucher_count = 1;
+
+    _WebService.request("voucher/generate", apiBodyObj).then(function (result) {
+        gotGenerateVoucherResult(result);
+    }).catch(function (error) {
+        console.log("Couldn't get data: " + error);
+        showNetworkErrorMessage();
+    });
+}
+
+function gotGenerateVoucherResult(result) {
+    busy.deactivate();
+
+    var arr = result;
+
+    if (arr.status == "success") {
+        var resultObj = arr.result;
+
+        var qrDataObj = {};
+        qrDataObj.tagqr = true;
+        qrDataObj.type = "voucher";
+        qrDataObj.voucher = resultObj.codes;
+        console.log(JSON.stringify(qrDataObj))
+
+        giftQrData.value = JSON.stringify(qrDataObj);
+    }
 }
 
 
@@ -83,18 +158,60 @@ QrScanner.on("QRECEIVED", function (message) {
     var scanData = message.result;
 
     console.log(scanData);
-    scannedQRAddress = scanData;
+    if (!Validator.isJson(scanData)) {
+        tagEvents.emit("toastShow", { message: "This is not a valid QR code" });
+        return;
+    } else {
+        var qrParsed = JSON.parse(scanData);
 
-    amountSendAddress.value = "";
-    sendAddressPopupShow.value = true;
+        if (qrParsed.tagqr) {
+            if (qrParsed.type === "address") {
+                scannedQRAddress = qrParsed.address;
+                amountSendAddress.value = "";
+                sendAddressPopupShow.value = true;
+            } else if (qrParsed.type === "voucher") {
+                voucherRedeem(qrParsed.voucher);
+            }
+        }
+    }
+
 });
+
+function voucherRedeem(voucher) {
+    busy.activate();
+
+    var apiBodyObj = {};
+    apiBodyObj.voucher = voucher;
+
+    _WebService.request("voucher/redeem", apiBodyObj).then(function (result) {
+        gotVoucherRedeemResult(result);
+    }).catch(function (error) {
+        console.log("Couldn't get data: " + error);
+        showNetworkErrorMessage();
+    });
+}
+
+function gotVoucherRedeemResult(result) {
+    busy.deactivate();
+
+    var arr = result;
+    console.log(JSON.stringify(arr))
+
+    if (arr.status == "success") {
+        var resultObj = arr.result;
+
+        loadUserWalletTotalCall();
+
+    }
+}
+
 
 var scannedQRAddress;
 var amountSendAddress = Observable();
 
 function transferAamoundToAddress() {
     var toType = "user";
-    
+
     var amountValue = amountSendAddress.value;
     if (!Validator.amount(amountValue)) {
         tagEvents.emit("toastShow", { message: "Amount should not be empty" });
@@ -104,7 +221,7 @@ function transferAamoundToAddress() {
 
     busy.activate();
 
-    _WebService.apiTagcoinTransferAddress(amountValue, toType, scannedQRAddress, "", 1).then(function (result) {
+    _WebService.apiTagcoinTransferAddress(amountValue, scannedQRAddress, "", 1).then(function (result) {
         gotTransferTagcoinAddressResult(result);
     }).catch(function (error) {
         console.log("Couldn't get data: " + error);
@@ -258,11 +375,37 @@ function popupCloseClicked() {
 
 }
 
+function logoutClicked() {
+
+    tagEvents.emit("alertEvent", { type: "confirm", title: "Logout", message: "Are you sure you want to log out?", callback: confirmAlertHandler });
+}
+
+function confirmAlertHandler(args) {
+    if (args === "yes") {
+        Preferences.write("email", null);
+        Preferences.write("access_token", null);
+        router.goto("loginPage");
+
+        _WebService.apiLogout();
+    }
+}
+
+function gotLogoutResult(result) {
+    console.log("gotLogoutResult")
+    busy.deactivate();
+
+}
+
+function showNetworkErrorMessage() {
+    busy.deactivate();
+    tagEvents.emit("alertEvent", { type: "info", title: loc.value.error, message: loc.value.network_error_message });
+}
+
 module.exports = {
     onViewActivate: onViewActivate,
     balanceText: balanceText,
     fiatChainData: fiatChainData,
-    fiatChainQrData: fiatChainQrData,
+    fiatChainQRData: fiatChainQRData,
 
     giftSendClicked: giftSendClicked,
     qrScanClicked: qrScanClicked,
@@ -274,7 +417,7 @@ module.exports = {
 
     giftSendPopupShow: giftSendPopupShow,
     amountInputGift: amountInputGift,
-    giftQRHandler: giftQRHandler,
+    generateVoucherHandler: generateVoucherHandler,
     giftQrData: giftQrData,
 
     sendEmailPopupShow: sendEmailPopupShow,
@@ -288,8 +431,11 @@ module.exports = {
     bankTransferHandler: bankTransferHandler,
     popupCloseClicked: popupCloseClicked,
 
-    transferAamoundToAddress:transferAamoundToAddress,
-    amountSendAddress:amountSendAddress,
-    loadUserWalletTotalCall:loadUserWalletTotalCall,
+    transferAamoundToAddress: transferAamoundToAddress,
+    amountSendAddress: amountSendAddress,
+    loadUserWalletTotalCall: loadUserWalletTotalCall,
 
+    logoutClicked: logoutClicked,
+    loadTransactions: loadTransactions,
+    transactionListData: transactionListData,
 }

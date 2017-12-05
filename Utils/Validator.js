@@ -24,7 +24,17 @@ function email(email) {
     return emailExpression.test(email);
 }
 
+function isJson(str) {
+    try {
+        JSON.parse(str);
+    } catch (e) {
+        return false;
+    }
+    return true;
+}
 
 module.exports = {
     amount: amount,
+    email:email,
+    isJson:isJson,
 };

@@ -14,40 +14,16 @@
 
     <LoadingIndicator ux:Name="loadingPanel" Opacity="0"  ThemeColor="#e44934" />
 
-    <Panel ux:Class="BlockItem" Height="6" Width="6" >
-        <string ux:Property="FillColorStatus" />
-        
-        <Match Value="{Property FillColorStatus}">
-            <Case String="1">
-                <Rectangle Width="6" Height="6" Color="#000"/>
-            </Case>
-            <Case String="0">
-                <Rectangle Width="6" Height="6" Color="#fff"/>
-            </Case>
-        </Match>
-    </Panel>
-
 
     <Tag.Popup ShowPopup="{giftSendPopupShow}" >
 
-        <StackPanel ItemSpacing="50" Margin="20" >
+        <StackPanel ItemSpacing="20" Margin="20" >
             <Tag.TextInput Value="{amountInputGift}" HintText="Amount" InputHint="Decimal"/>
-                
-            <Tag.RedButton Text="GENERATE QR" Clicked="{giftQRHandler}"/>
-                
-            <Panel Width="168" Height="168" Alignment="HorizontalCenter" >
-                <StackPanel ItemSpacing="0">
-                    <Each Items="{giftQrData}" >
-                        <Panel Height="6" >
-                            <StackPanel Orientation="Horizontal" ItemSpacing="0">
-                                <Each Items="{}" >
-                                    <BlockItem FillColorStatus="{}" />
-                                </Each>
-                            </StackPanel>
-                        </Panel>
-                    </Each>
-                </StackPanel>
-            </Panel>
+            <Tag.RedButton Text="GENERATE VOUCHER" Clicked="{generateVoucherHandler}"/>
+
+            <WhileString Value="{giftQrData}" Test="IsNotEmpty">
+                <Tag.QRDisplay QRValue="{giftQrData}" BlockColor="#000" BlockSize="6"  Alignment="HorizontalCenter"/>
+            </WhileString>
 
             <Tag.GrayButton Text="CANCEL" Clicked="{popupCloseClicked}"/>
         </StackPanel>
@@ -119,128 +95,104 @@
 
     <DockPanel >
         <Panel Dock="Top" Height="60"  >
-                <Grid Columns="auto,1*,auto"  >
-                    <Panel Width="100" >
-                        <Image File="../Assets/tippit_logo.png" Height="40" Margin="-30,0,0,0" />
-                    </Panel>
+            <Grid Columns="auto,1*,auto"  >
+                <Panel Padding="10,0,0,0" HitTestMode="LocalBounds" >
+                    <Image File="../Assets/tippit_logo.png" Height="40"  />
+                    <WhilePressed>
+                        <Scale Factor="1.3" Duration="0.4"/>
+                    </WhilePressed>
+                    <Clicked>
+                        <Callback Handler="{logoutClicked}"/>
+                    </Clicked>
+                </Panel>
 
-                    <Panel HitTestMode="LocalBoundsAndChildren"  >
-                        <HeaderText Value="BALANCE - {balanceText} PHP" Alignment="Center" Color="#fff"  />
-                        <Clicked>
-                            <Callback Handler="{loadUserWalletTotalCall}" />
-                        </Clicked>
-                    </Panel>
-
-                     <Panel Width="50" >
-                           
-
-                    </Panel>
-                </Grid>
-
-                <Rectangle Layer="Background" Color="#f00" />
-            </Panel>
-
-		<Panel>
-            <WobbleButton Width="300" Height="300" Alignment="BottomRight" Offset="100,100" />
-
-            <StackPanel Margin="10,40,0,0" >
-                <Panel Width="168" Height="200" Alignment="HorizontalCenter" >
-                    <StackPanel ItemSpacing="0">
-                        <Each Items="{fiatChainQrData}" >
-                            <Panel Height="6" >
-                                <StackPanel Orientation="Horizontal" ItemSpacing="0">
-                                    <Each Items="{}" >
-                                        <BlockItem FillColorStatus="{}" />
-                                    </Each>
-                                </StackPanel>
-                            </Panel>
-                        </Each>
+                <Panel HitTestMode="LocalBoundsAndChildren"  >
+                    <StackPanel Alignment="Center">
+                        <LabelText Value="BALANCE" TextAlignment="Center" Color="#fff"  />
+                        <HeaderText Value="{balanceText} PHP" TextAlignment="Center" Color="#fff"  />
                     </StackPanel>
 
-                    <!-- <Clicked>
-                        <Callback Handler="{qrClipboardCopyHandler}" />
-                    </Clicked> -->
+                    <Clicked>
+                        <Callback Handler="{loadUserWalletTotalCall}" />
+                    </Clicked>
                 </Panel>
-                <HeaderText Value="{fiatChainData}" TextAlignment="Center" />
-            </StackPanel>
-			
+
+                <Panel Width="50" HitTestMode="LocalBounds" >
+                    <SettingsIcon Color="#fff" Alignment="Center" />
+                    <WhilePressed>
+                        <Scale Factor="1.3" Duration="0.4"/>
+                    </WhilePressed>
+                    <Clicked>
+                    </Clicked>
+                </Panel>
+            </Grid>
+
+            <Rectangle Layer="Background" Color="#f00" />
+        </Panel>
+
+		<Panel >
+            <WobbleButton Width="300" Height="300" Alignment="BottomRight" Offset="100,100" />
+
+            <PageIndicator Alignment="BottomCenter" Navigation="nav" >
+                <Circle ux:Template="Dot" Width="10" Height="10" Margin="10,0,0,20" Color="#ccc">
+                    <ActivatingAnimation>
+                        <Scale Factor="1.3" />
+                    </ActivatingAnimation>
+                    <Stroke Color="#333"/>
+                </Circle>
+            </PageIndicator>
+
+            <PageControl ux:Name="nav">
+                <Page>
+                    <StackPanel Margin="10,40,10,0" ItemSpacing="20" >
+                        <Tag.QRDisplay QRValue="{fiatChainQRData}" BlockColor="#000" BlockSize="6"  Alignment="HorizontalCenter"/>
+                        <HeaderText Value="{fiatChainData}" TextAlignment="Center" />
+                    </StackPanel>
+                </Page>
+
+                <Page>
+                    <ScrollView >
+                        <StackPanel Padding="10" ItemSpacing="10" >
+
+                            <Each Items="{transactionListData}" >
+                                <Panel Padding="10" >
+                                    <Grid Columns="1*,auto">
+                                        <StackPanel>
+                                            <LabelText Value="{first_name} {last_name}" FontSize="14"/>
+                                            <LabelText Value="{date}" FontSize="12"/>
+                                            <LabelText Value="{narration}" FontSize="12"/>
+                                        </StackPanel>
+                                        <Panel>
+
+                                            <WhileString Value="{direction}" Equals="out" >
+                                                <Text Value="-{from_amount}" Color="#f00" Alignment="VerticalCenter" />
+                                            </WhileString>
+                                            <WhileString Value="{direction}" Equals="in" >
+                                                <Text Value="+{from_amount}" Color="#0f0" Alignment="VerticalCenter" />
+                                            </WhileString>
+                                            
+                                        </Panel>
+                                    </Grid>
+
+                                    <Rectangle Fill="#fcf9f9" CornerRadius="4" Layer="Background">
+                                        <Stroke Color="#e8e8e8" />
+                                    </Rectangle> 
+                                    
+                                </Panel>
+                            </Each>
+
+                        </StackPanel>
+                    </ScrollView>
+
+                    <WhileActive>
+                        <Callback Handler="{loadTransactions}"/>
+                    </WhileActive>
+                </Page>
+            </PageControl>
 		</Panel>
 
+
     </DockPanel>
-
-
-    <Panel ux:Class="WobbleButton" ux:Name="self" TransformOrigin="Center">
-        <Cross ux:Name="cross" HitTestMode="None"/>
-
-        <ClockIcon ux:Name="icon1" Margin="20,30,0,20" Width="30" Height="30" Alignment="Left" Opacity="0" IsEnabled="false">
-            <Translation ux:Name="trans1" X="1.5" RelativeTo="Size" />
-            <Clicked>
-                <Toggle Target="expanded" />
-                <Callback  Handler="{giftSendClicked}" />
-            </Clicked>
-        </ClockIcon>
-        <TalkIcon ux:Name="icon2" Margin="40,90,0,0" Width="30" Height="30" Alignment="TopLeft" Opacity="0" IsEnabled="false">
-            <Translation ux:Name="trans2" X="1" Y="1" RelativeTo="Size" />
-            <Clicked>
-                <Toggle Target="expanded" />
-                <Callback  Handler="{qrScanClicked}" />
-            </Clicked>
-        </TalkIcon>
-
-        <LocationIcon ux:Name="icon3" Margin="0,40,20,0" Offset="-35,0" Width="30" Height="30" Alignment="Top" Opacity="0" IsEnabled="false">
-            <Translation ux:Name="trans3" Y="1.5" RelativeTo="Size" />
-            <Clicked>
-                <Toggle Target="expanded" />
-                <Callback  Handler="{emailSendClicked}" />
-            </Clicked>
-        </LocationIcon>
-
-        <BankIcon ux:Name="icon4" Margin="60,30,20,0" Width="30" Height="30" Alignment="Top" Opacity="0" IsEnabled="false">
-            <Translation ux:Name="trans4" Y="1.5" RelativeTo="Size" />
-            <Clicked>
-                <Toggle Target="expanded" />
-                <Callback  Handler="{bankSendClicked}" />
-            </Clicked>
-        </BankIcon>
-
-
-        <Circle ux:Name="overlayCircle" Color="#0004" Opacity="0" Width="20%" Height="20%" Alignment="Center" >
-            <Clicked>
-                <Toggle Target="expanded" />
-            </Clicked>
-        </Circle>
-        <Circle ux:Name="circle" Color="#F00" Width="20%" Height="20%" />
-
-
-        <WhileTrue ux:Name="enableOptions">
-            <Change icon1.IsEnabled="true" />
-            <Change icon2.IsEnabled="true" />
-            <Change icon3.IsEnabled="true" />
-            <Change icon4.IsEnabled="true" />
-        </WhileTrue>
-
-        <WhileTrue ux:Name="expanded">
-            <Change circle.Height="100%" Easing="CubicInOut" Duration="0.2" DelayBack="0"/>
-            <Change circle.Width="100%" Easing="CubicInOut" Duration="0.2"  DelayBack="0"/>
-
-            <Change enableOptions.Value="true" Delay="0.1" />
-            <Change overlayCircle.Opacity="1" Delay="0.1" Duration="0.1" />
-            <Rotate Target="cross" Degrees="-45" Duration="0.2" Easing="CubicInOut" />
-
-            <Change trans1.X="0" Delay="0" Duration="0.4" Easing="BounceOut" EasingBack="QuadraticInOut" DurationBack="0.2"    DelayBack="0"/>
-            <Change trans2.X="0" Delay="0.05" Duration="0.4" Easing="BounceOut" EasingBack="QuadraticInOut" DurationBack="0.2" DelayBack="0"/>
-            <Change trans2.Y="0" Delay="0.05" Duration="0.4" Easing="BounceOut" EasingBack="QuadraticInOut" DurationBack="0.2" DelayBack="0"/>
-            <Change trans3.Y="0" Delay="0.1" Duration="0.4" Easing="BounceOut" EasingBack="QuadraticInOut" DurationBack="0.2"  DelayBack="0"/>
-            <Change trans4.Y="0" Delay="0.15" Duration="0.4" Easing="BounceOut" EasingBack="QuadraticInOut" DurationBack="0.2"  DelayBack="0"/>
-
-            <Change icon1.Opacity="1" Delay="0.1" Duration="0.1" Easing="QuadraticInOut" DelayBack="0"/>
-            <Change icon2.Opacity="1" Delay="0.1" Duration="0.1" Easing="QuadraticInOut" DelayBack="0"/>
-            <Change icon3.Opacity="1" Delay="0.1" Duration="0.1" Easing="QuadraticInOut" DelayBack="0"/>
-            <Change icon4.Opacity="1" Delay="0.1" Duration="0.1" Easing="QuadraticInOut" DelayBack="0"/>
-        </WhileTrue>
-
-    </Panel>
-
 
 			
 </Page>

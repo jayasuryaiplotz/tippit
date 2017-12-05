@@ -1,0 +1,59 @@
+<Panel ux:Class="Tag.QRDisplay" HitTestMode="LocalBounds" BlockColor="#000" BlockSize="6"  >
+    <string ux:Property="QRValue" />
+    <float4 ux:Property="BlockColor" />
+    <float ux:Property="BlockSize" />
+
+    <JavaScript>
+        var Observable = require('FuseJS/Observable');
+        var qrEncoder = require("Utils/QrEncoder");
+       // var clip = require("ClipboardManager");
+
+        var qrData = Observable();
+
+        this.QRValue.onValueChanged( module, function(item) {
+
+            console.log("item"+item)
+            qrData.clear();
+            if(item){
+                var bitMatrix = qrEncoder.encode(item, 1);
+                qrData.addAll(bitMatrix);
+            }
+		})
+
+     	module.exports = {
+			qrData:qrData,
+		}
+	</JavaScript>
+
+    <Panel ux:Class="BlockItem" Height="{ReadProperty this.BlockSize}" Width="{ReadProperty this.BlockSize}" >
+        <string ux:Property="FillColorStatus" />
+        <float4 ux:Property="BlockColor" />
+        <float ux:Property="BlockSize" />
+
+        <WhileString Value="{Property FillColorStatus}" Equals="1" >
+            <Rectangle Width="{ReadProperty this.BlockSize}" Height="{ReadProperty this.BlockSize}" Color="{ReadProperty this.BlockColor}"/>
+        </WhileString>
+        <WhileString Value="{Property FillColorStatus}" Equals="0" >
+            <Rectangle Width="{ReadProperty this.BlockSize}" Height="{ReadProperty this.BlockSize}" Color="#fff0"/>
+        </WhileString>
+    </Panel>
+
+    <Panel>
+        <StackPanel ItemSpacing="0">
+            <Each Items="{qrData}" >
+                <Panel Height="{ReadProperty this.BlockSize}" >
+                    <StackPanel Orientation="Horizontal" ItemSpacing="0">
+                        <Each Items="{}" >
+                            <BlockItem FillColorStatus="{}" BlockColor="{ReadProperty this.BlockColor}" BlockSize="{ReadProperty this.BlockSize}"/>
+                        </Each>
+                    </StackPanel>
+                </Panel>
+            </Each>
+        </StackPanel>
+
+        <!-- <Clicked>
+            <Callback Handler="{qrClipboardCopyHandler}" />
+        </Clicked> -->
+    </Panel>
+
+</Panel>

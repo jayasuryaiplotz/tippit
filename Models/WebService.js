@@ -4,12 +4,14 @@ var _model = require('Models/GlobalModel');
 _url = "https://api.tagcash.com/";
 _serverurl = "https://api.tagcash.com/";
 
-// _url = "https://demoapi.tagcash.com/";
-// _serverurl = "https://demoapi.tagcash.com/";
+var client_id = "7461675f68785f69e65";
+var client_secret = "746167626f6e645f686966785f6970686f6";
 
+// var client_id = "XXXX";
+// var client_secret = "XXXX";
 
 function apiAuthenticate(email, password) {
-    var data = "client_id=XXXX&client_secret=XXXX&grant_type=password&user_email=" + encodeURIComponent(email) + "&user_password=" + encodeURIComponent(password);
+    var data = "client_id="+client_id+"&client_secret="+client_secret+"&grant_type=password&user_email=" + encodeURIComponent(email) + "&user_password=" + encodeURIComponent(password);
 
     return fetch(_serverurl + "oauth/accesstoken", {
         method: 'post',
@@ -27,7 +29,7 @@ function apiAuthenticate(email, password) {
 }
 
 function apiUserRegistration(email, firstName, lastName, password) {
-    var data = "client_id=XXXX&client_secret=ZZZZ&user_email=" + encodeURIComponent(email) + "&user_firstname=" + firstName + "&user_lastname=" + lastName + "&user_password=" + encodeURIComponent(password);
+    var data = "client_id="+client_id+"&client_secret="+client_secret+"&user_email=" + encodeURIComponent(email) + "&user_firstname=" + firstName + "&user_lastname=" + lastName + "&user_password=" + encodeURIComponent(password);
 
     return fetch(_serverurl + "registration", {
         method: 'post',
@@ -45,7 +47,7 @@ function apiUserRegistration(email, firstName, lastName, password) {
 }
 
 function apiForgotPassword(email, password) {
-    var data = "client_id=XXXX&client_secret=ZZZZ&user_email=" + encodeURIComponent(email);
+    var data = "client_id="+client_id+"&client_secret="+client_secret+"&user_email=" + encodeURIComponent(email);
 
     return fetch(_serverurl + "registration/resetpassword", {
         method: 'post',
@@ -60,6 +62,17 @@ function apiForgotPassword(email, password) {
     }).catch(function (err) {
         console.log(err);
     });
+}
+
+function apiLogout() {
+    var data = "access_token=" + _model.accessToken;
+
+    return fetch(_serverurl + "oauth/logout", {
+        method: 'post',
+        headers: { "Content-type": "application/x-www-form-urlencoded; charset=UTF-8" },
+        body: data
+    });
+
 }
 
 function request(url, options = {}, method = 'POST') {
@@ -84,6 +97,8 @@ function request(url, options = {}, method = 'POST') {
         });
     }).catch(function (err) {
         console.log(err)
+        console.log(JSON.stringify(err))
+        
     });
 
 }
@@ -537,10 +552,8 @@ function apiSevenDepositTransactions(Id, type) {
 }
 
 
-
-
-function apiTagcoinTransferAddress(amount, toType, toId, narration, fromWallet) {
-    var data = "access_token=" + _model.accessToken + "&amount=" + amount + "&to_type=" + toType + "&from_wallet_id=" + fromWallet + "&to_wallet_id=" + fromWallet + "&narration=" + narration + "&to_id=" + toId;
+function apiTagcoinTransferAddress(amount, address, narration, fromWallet) {
+    var data = "access_token=" + _model.accessToken + "&amount=" + amount + "&to_crypto_address=" + address + "&from_wallet_id=" + fromWallet + "&to_wallet_id=" + fromWallet + "&narration=" + narration ;
     console.log(data)
 
     return fetch(_url + "wallet/transfer", {
@@ -564,6 +577,7 @@ module.exports =
         apiAuthenticate: apiAuthenticate,
         apiUserRegistration: apiUserRegistration,
         apiForgotPassword: apiForgotPassword,
+        apiLogout:apiLogout,
         request: request,
 
         apiVskypeCalculateAmount: apiVskypeCalculateAmount,

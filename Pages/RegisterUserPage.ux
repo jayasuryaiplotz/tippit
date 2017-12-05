@@ -16,19 +16,19 @@
 
             <StackPanel ux:Name="inputArea" Padding="16" MaxWidth="360" ItemSpacing="20" >
                 <Panel>
-                    <EmailIco Color="{Resource Tag.LoginInputIcon}" Margin="10,0,0,0" Width="26" Alignment="CenterLeft" />
+                    <EmailIco Color="{Resource Tag.LoginInputIcon}" Margin="10,0,0,0" Alignment="CenterLeft" />
                     <Tag.IconTextInput Value="{emailValue}" PlaceholderText="{loc.email}" InputHint="Email" ActionStyle="Next"  />
                 </Panel>
                 <Panel>
-                    <AtoZIcon Color="{Resource Tag.LoginInputIcon}" Margin="10,0,0,0" Width="26" Alignment="CenterLeft" />
+                    <AtoZIcon Color="{Resource Tag.LoginInputIcon}" Margin="10,0,0,0" Alignment="CenterLeft" />
                     <Tag.IconTextInput Value="{firstNameValue}" PlaceholderText="{loc.first_name}" ActionStyle="Next"  />
                 </Panel>
                 <Panel>
-                    <AtoZIcon Color="{Resource Tag.LoginInputIcon}" Margin="10,0,0,0" Width="26" Alignment="CenterLeft" />
+                    <AtoZIcon Color="{Resource Tag.LoginInputIcon}" Margin="10,0,0,0" Alignment="CenterLeft" />
                     <Tag.IconTextInput Value="{lastNameValue}" PlaceholderText="{loc.last_name}" ActionStyle="Next"  />
                 </Panel>
                 <Panel>
-                    <PasswordIco Color="{Resource Tag.LoginInputIcon}" Margin="10,0,0,0" Width="26" Alignment="CenterLeft" />
+                    <PasswordIco Color="{Resource Tag.LoginInputIcon}" Margin="10,0,0,0" Alignment="CenterLeft" />
                     <Tag.IconTextInput Value="{passwordValue}" PlaceholderText="{loc.password}" IsPassword="true" ActionStyle="Go" />
                 </Panel>
 

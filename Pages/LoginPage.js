@@ -4,9 +4,8 @@ var Preferences = require('Utils/Preferences');
 var _model = require('Models/GlobalModel');
 var _WebService = require('Models/WebService');
 
-
-var emailValue = Observable("");
-var passwordValue = Observable("");
+var emailValue = Observable();
+var passwordValue = Observable();
 
 var status = 0;
 var response_ok = false;

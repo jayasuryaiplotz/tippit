@@ -20,6 +20,21 @@
   ],
   "Mobile": {
     "Orientations": "Portrait"
-  }
+  },
+  "Title": "TIPPIT",
+	"Publisher": "Tagcash",
+	"Version": "0.0.1",
+	"Android": {
+		"SDK": {
+			"MinVersion": 21,
+		},
+		"Icons": {
+			"MDPI": "Icons/Android/icon@MDPI.png",
+			"HDPI": "Icons/Android/icon@HDPI.png",
+			"XHDPI": "Icons/Android/icon@XHDPI.png",
+			"XXHDPI": "Icons/Android/icon@XXHDPI.png",
+			"XXXHDPI": "Icons/Android/icon@XXXHDPI.png"
+		}
+	}
 }
 

@@ -1,6 +1,6 @@
 <Page ux:Class="Tag.Page"  >
 
 
-    <Rectangle Layer="Background" Color="{Resource Tag.PageBackgroundColor}" />
+    <Rectangle Layer="Background" Color="#fff" />
 
 </Page>
