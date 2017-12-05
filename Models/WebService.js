@@ -4,11 +4,8 @@ var _model = require('Models/GlobalModel');
 _url = "https://api.tagcash.com/";
 _serverurl = "https://api.tagcash.com/";
 
-var client_id = "7461675f68785f69e65";
-var client_secret = "746167626f6e645f686966785f6970686f6";
-
-// var client_id = "XXXX";
-// var client_secret = "XXXX";
+var client_id = "XXXX";
+var client_secret = "XXXX";
 
 function apiAuthenticate(email, password) {
     var data = "client_id="+client_id+"&client_secret="+client_secret+"&grant_type=password&user_email=" + encodeURIComponent(email) + "&user_password=" + encodeURIComponent(password);
